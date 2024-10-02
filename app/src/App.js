@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ReactMic } from './node_modules/react-mic';
+import { ReactMic } from 'react-mic';
 import axios from 'axios';
 import logo from './circlelogo.png';
 
@@ -16,7 +16,32 @@ function App() {
     await window.electronAPI.restoreApp();
   };
 
-  const startRecording = () => {}
+  const startRecording = () => {
+    setIsRecording(true);
+  };
+
+  const stopRecording = () => {
+    setIsRecording(false);
+  };
+
+  const onStop = async (recordedBlob) => {
+    const formData = new FormData();
+    formData.append('file', recordedBlob.blob, 'audio.wav');
+
+    try {
+      // Assuming your backend is set up to handle this at '/speech-to-text'
+      const response = await axios.post('http://localhost:5000/speech-to-text', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      
+      // Update transcription with the response from the backend
+      setTranscription(response.data.transcription);
+    } catch (error) {
+      console.error('Error transcribing audio:', error);
+    }
+  };
 
   return (
     <div className=' w-screen h-screen flex items-center justify-center bg-black text-white text-center'>
@@ -27,7 +52,7 @@ function App() {
         </div>
         <div className='flex justify-center p-2'>
           <input className='w-1/2 p-2 rounded-full rounded-e-none px-3 mr-0 bg-transparent border-gray-400 border-[1px] border-e-0' placeholder='Type a task' />
-          <button className='bg-transparent  hover:bg-white hover:text-black transition text-gray-400 rounded-s-none px-2 rounded-full flex items-center border-gray-400 border-[1px] border-s-0'>
+          <button onMouseDown={startRecording} onMouseUp={stopRecording} className='bg-transparent  hover:bg-white hover:text-black transition text-gray-400 rounded-s-none px-2 rounded-full flex items-center border-gray-400 border-[1px] border-s-0'>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 0 0 6-6v-1.5m-6 7.5a6 6 0 0 1-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 0 1-3-3V4.5a3 3 0 1 1 6 0v8.25a3 3 0 0 1-3 3Z" />
             </svg>
@@ -39,6 +64,17 @@ function App() {
           </button>
 
         </div>
+
+        {isRecording && (
+          <ReactMic
+            record={isRecording}
+            className="sound-wave"
+            onStop={onStop}
+            mimeType="audio/wav"
+            strokeColor="#FFFFFF"
+            backgroundColor="#FF4081"
+          />
+        )}
 
         {screenshotPath && (
           <div className="mt-5">
