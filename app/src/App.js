@@ -1,13 +1,21 @@
 import React, { useState } from 'react';
+import { ReactMic } from './node_modules/react-mic';
+import axios from 'axios';
 
 function App() {
   const [screenshotPath, setScreenshotPath] = useState('');
+  const [isRecording, setIsRecording] = useState(false);
+  const [transcription, setTranscription] = useState('')
+
+
   const handleScreenshot = async () => {
     await window.electronAPI.minimizeApp();
     const filePath = await window.electronAPI.takeScreenshot();
     setScreenshotPath(filePath);
     await window.electronAPI.restoreApp();
   };
+
+  const startRecording = () => {}
 
   return (
     <div className='font-body w-screen h-screen flex items-center justify-center bg-black text-white text-center'>
@@ -21,6 +29,7 @@ function App() {
         <div>
           <input className='w-1/2 rounded-xl p-1 px-2 m-1 text-black' placeholder='Type a task' />
           <button onClick={handleScreenshot} className='bg-gray-600 text-white p-1 px-2 rounded-xl'>Go</button>
+          <button className='bg-gray-600 text-white p-1 px-2 rounded-xl'>Mic</button>
         </div>
         {screenshotPath && (
           <div className="mt-5">
