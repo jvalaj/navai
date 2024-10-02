@@ -11,6 +11,7 @@ const createWindow = () => {
         title: 'Nav AI',
         width: 800,
         height: 800,
+        icon: "assets/circlelogo.png",
         webPreferences: {
             webSecurity: false,
             contextIsolation: true,

@@ -10,7 +10,8 @@
   "author": "jvalaj",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^32.1.2"
+    "electron": "^32.1.2",
+    "electron-packager": "^17.1.2"
   },
   "dependencies": {
     "screenshot-desktop": "^1.15.0"
