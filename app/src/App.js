@@ -10,9 +10,14 @@ function App() {
   };
 
   return (
-    <div className='w-screen h-screen flex items-center justify-center bg-gray-800 text-white text-center'>
+    <div className='font-body w-screen h-screen flex items-center justify-center bg-black text-white text-center'>
       <div>
-        <p className='text-xl mb-5'>Nav AI</p>
+        <div>
+          <p className=' text-5xl mb-5 font-body'>Nav AI</p>
+          <img src="../assets/circlelogo.png" />
+
+
+        </div>
         <div>
           <input className='w-1/2 rounded-xl p-1 px-2 m-1 text-black' placeholder='Type a task' />
           <button onClick={handleScreenshot} className='bg-gray-600 text-white p-1 px-2 rounded-xl'>Go</button>
