@@ -1,0 +1,15 @@
+{
+  "name": "folder1",
+  "version": "1.0.0",
+  "description": "navai",
+  "main": "main.js",
+  "scripts": {
+    "start": "nodemon --exec electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "jvalaj",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^32.1.2"
+  }
+}
