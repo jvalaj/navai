@@ -4,7 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const screenshot = require('screenshot-desktop');
 const OpenAI = require('openai');
-
+require('dotenv').config();
 
 let mainWindow;
 const createWindow = () => {
@@ -54,7 +54,7 @@ ipcMain.handle('take-screenshot', async () => {
         }, 500); // 2000 milliseconds delay (2 seconds)
     });
 });
-const openai = new OpenAI({ apiKey: 'sk-STAwBhnrf65LNnkWIUKTKsoX2FJhCIg6Q2-Fm068Y0T3BlbkFJFN29gKLot0PQmZgoQwX5yE6NI1MhVflxKKJp_6BrwA' });
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 ipcMain.handle('save-audio', async (event, audioBuffer) => {
     const audioPath = path.join(app.getPath('desktop'), `recording_${Date.now()}.wav`);
     fs.writeFileSync(audioPath, Buffer.from(audioBuffer));
