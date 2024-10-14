@@ -3,9 +3,10 @@ const url = require('url');
 const path = require('path');
 const fs = require('fs');
 const screenshot = require('screenshot-desktop');
+const OpenAI = require('openai');
+
 
 let mainWindow;
-
 const createWindow = () => {
     mainWindow = new BrowserWindow({
         title: 'Nav AI',
@@ -52,6 +53,23 @@ ipcMain.handle('take-screenshot', async () => {
             resolve(filePath);
         }, 500); // 2000 milliseconds delay (2 seconds)
     });
+});
+const openai = new OpenAI({ apiKey: 'sk-STAwBhnrf65LNnkWIUKTKsoX2FJhCIg6Q2-Fm068Y0T3BlbkFJFN29gKLot0PQmZgoQwX5yE6NI1MhVflxKKJp_6BrwA' });
+ipcMain.handle('save-audio', async (event, audioBuffer) => {
+    const audioPath = path.join(app.getPath('desktop'), `recording_${Date.now()}.wav`);
+    fs.writeFileSync(audioPath, Buffer.from(audioBuffer));
+
+    try {
+        const transcription = await openai.audio.transcriptions.create({
+            file: fs.createReadStream(audioPath),
+            model: "whisper-1",
+        });
+        return transcription.text; // Return the transcription text
+
+    } catch (error) {
+        console.error("Error during transcription:", error);
+        return error; // Return null on error
+    } // Optionally, return the path to confirm the save
 });
 
 app.whenReady().then(createWindow);
