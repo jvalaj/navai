@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ReactMic } from './node_modules/react-mic';
+import { ReactMic } from 'react-mic';
 import axios from 'axios';
 import logo from './circlelogo.png';
 
@@ -16,7 +16,7 @@ function App() {
     await window.electronAPI.restoreApp();
   };
 
-  const startRecording = () => {}
+  const startRecording = () => { }
 
   return (
     <div className=' w-screen h-screen flex items-center justify-center bg-black text-white text-center'>
