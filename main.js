@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, screen } = require('electron');
 const url = require('url');
 const path = require('path');
 const fs = require('fs');
@@ -29,7 +29,9 @@ const createWindow = () => {
         slashes: true,
     });
 
-    mainWindow.loadURL('http://localhost:3000'); // Change to startUrl if serving from build
+    mainWindow.loadURL('http://localhost:3000');
+
+    // Change to startUrl if serving from build
 }
 
 // Minimize the app
@@ -42,6 +44,15 @@ ipcMain.handle('minimize-app', () => {
 // Restore the app
 ipcMain.handle('restore-app', () => {
     if (mainWindow) {
+        setTimeout(() => {
+            const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+            mainWindow.setBounds({
+                x: width - 400,  // Move window to the right
+                y: 0,            // Align to the top
+                width: 400,      // Make window square (400x400)
+                height: 600,
+            });
+        }, 20);
         mainWindow.restore();
     }
 });
@@ -71,8 +82,10 @@ ipcMain.handle('take-screenshot', async () => {
         setTimeout(async () => {
             const filePath = path.join(imagesDir, `screenshot-${Date.now()}.png`);
             await screenshot({ filename: filePath });
+
             resolve(filePath);
-        }, 500); // 2000 milliseconds delay (2 seconds)
+
+        }, 1000); // 2000 milliseconds delay (2 seconds)
     });
 });
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -108,10 +121,16 @@ ipcMain.handle('send-ss', async (event, fPath, transcriptionText) => {
 
         // Encode the image to base64
         const base64Image = encodeImage(resolvedPath);
-        const prompt = `this is what the user input: "${transcriptionText}". 
-        before giving a response to them, 
-        analyze the image they have provided and see if that can help you respond to their input. 
-        also, do not bold anything in your response.`;
+        //     const prompt = `you are an assistant that provided steps when the user gives you a screenshot and an input. if anything they ask is not a question, 
+        //     do not respond but tell them you can only help in providing assistance on navigating through tasks/software.
+        //     also, do not bold anything in your response. 
+        //     if they ask anything that is not a question or is a random statement, tell them to ask a question.
+        //     you are supposed to tell them the steps they need to follow based on what the screenshot shows you to achieve the task they have asked help in.
+        //     this is what the user input: "${transcriptionText}". 
+        //     before giving a response to them, please see if they input is something new or you are continuing the conversation about a previous task.
+        //     analyze the screenshot they have provided and see if that screenshot has anything to do with their input. 
+        //    `;
+        const prompt = ""
 
 
 
@@ -122,7 +141,7 @@ ipcMain.handle('send-ss', async (event, fPath, transcriptionText) => {
                 {
                     role: "user",
                     content: [
-                        { type: "text", text: prompt }, // Sending transcribed text
+                        { type: "text", text: transcriptionText }, // Sending transcribed text
                         {
                             type: "image_url",
                             image_url: {

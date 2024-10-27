@@ -7,6 +7,7 @@ function App() {
   const [isRecording, setIsRecording] = useState(false);
   const [transcription, setTranscription] = useState('');
   const mediaRecorderRef = useRef(null);
+  const [llogo, setLogo] = useState(true)
   const audioChunksRef = useRef([]);
   const [responseFromOpenAI, setResponseFromOpenAI] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -14,6 +15,7 @@ function App() {
     await window.electronAPI.minimizeApp();
     const filePath = await window.electronAPI.takeScreenshot();
     setScreenshotPath(filePath);
+    setLogo(false);
     await window.electronAPI.restoreApp();
     handleSendToOpenAI(filePath, transcription);
   };
@@ -80,15 +82,16 @@ function App() {
   };
 
   return (
-    <div className=' w-screen h-screen flex items-center justify-center bg-black text-white text-center'>
+    <div className={`w-screen h-screen  ${llogo ? 'flex ' : ''} bg-black items-center justify-center text-white text-center`}>
       <div>
-        <div className='flex items-center justify-center h-20'>
-          <img src={logo} className='h-12 rounded-full mr-2 shadow-[0_0_7px_rgba(255,255,255,1)]' alt="Logo" /> {/* Adjust height and margin as needed */}
+        {llogo ? <div className='flex items-center justify-center h-20'>
+          <img src={logo} className='h-12 rounded-full mr-2 shadow-[0_0_7px_rgba(255,255,255,1)]' alt="Logo" />{/* Adjust height and margin as needed */}
           <div className='text-5xl mb-0 font-thin font-body'>Nav AI</div>
-        </div>
+        </div> : ""}
+
 
         {transcription && (
-          <div>
+          <div className='mt-5'>
             <p>{transcription}</p>
           </div>
         )}
@@ -124,7 +127,7 @@ function App() {
         )}
 
         {responseFromOpenAI && (
-          <div className="text-left m-4 p-4 border border-gray-600  rounded-md text-white">
+          <div className="text-left p-4 border border-gray-600  rounded-md text-white">
             {/* Splitting sentences into paragraphs */}
             {responseFromOpenAI.split('\n').map((line, index) => (
               <p key={index} className="mb-2">{line}</p>
@@ -133,7 +136,7 @@ function App() {
         )}
 
       </div>
-    </div>
+    </div >
   );
 }
 
