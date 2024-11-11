@@ -121,27 +121,25 @@ ipcMain.handle('send-ss', async (event, fPath, transcriptionText) => {
 
         // Encode the image to base64
         const base64Image = encodeImage(resolvedPath);
-        //     const prompt = `you are an assistant that provided steps when the user gives you a screenshot and an input. if anything they ask is not a question, 
-        //     do not respond but tell them you can only help in providing assistance on navigating through tasks/software.
-        //     also, do not bold anything in your response. 
-        //     if they ask anything that is not a question or is a random statement, tell them to ask a question.
-        //     you are supposed to tell them the steps they need to follow based on what the screenshot shows you to achieve the task they have asked help in.
-        //     this is what the user input: "${transcriptionText}". 
-        //     before giving a response to them, please see if they input is something new or you are continuing the conversation about a previous task.
-        //     analyze the screenshot they have provided and see if that screenshot has anything to do with their input. 
-        //    `;
-        const prompt = ""
+        const prompt = `you are an assistant that provides steps when the user gives you an image and an input text.
+            also, do not bold anything in your response. meaning, do not add any * symbols in your response.
+             you are supposed to tell them the steps they need to follow based on what the image provided shows you to achieve the task they have asked help in.
+            this is what the user input: "${transcriptionText}". 
+            before giving a response to them, please see if they input is something new or you are continuing the conversation about a previous task.
+            analyze the image and see if that has anything to do with their input. 
+           `;
+
 
 
 
         // Send the base64 image along with the transcription text to the OpenAI API
         const response = await openai.chat.completions.create({
-            model: "gpt-4o-mini",
+            model: "gpt-4o",
             messages: [
                 {
                     role: "user",
                     content: [
-                        { type: "text", text: transcriptionText }, // Sending transcribed text
+                        { type: "text", text: prompt }, // Sending transcribed text
                         {
                             type: "image_url",
                             image_url: {

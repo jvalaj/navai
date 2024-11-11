@@ -127,13 +127,21 @@ function App() {
         )}
 
         {responseFromOpenAI && (
-          <div className="text-left p-4 border border-gray-600  rounded-md text-white">
-            {/* Splitting sentences into paragraphs */}
-            {responseFromOpenAI.split('\n').map((line, index) => (
-              <p key={index} className="mb-2">{line}</p>
-            ))}
+          <div className="text-left p-4 border border-gray-600 rounded-md text-white">
+            {responseFromOpenAI
+              .split('\n')
+              .map((line, index) => (
+                <p
+                  key={index}
+                  className="mb-2"
+                  dangerouslySetInnerHTML={{
+                    __html: line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'),
+                  }}
+                ></p>
+              ))}
           </div>
         )}
+
 
       </div>
     </div >
