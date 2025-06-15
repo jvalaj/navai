@@ -82,52 +82,65 @@ function App() {
   };
 
   return (
-    <div className={`w-screen h-screen  ${llogo ? 'flex ' : ''} bg-black items-center justify-center text-white text-center`}>
-      <div>
-        {llogo ? <div className='flex items-center justify-center h-20'>
-          <img src={logo} className='h-12 rounded-full mr-2 shadow-[0_0_7px_rgba(255,255,255,1)]' alt="Logo" />{/* Adjust height and margin as needed */}
-          <div className='text-5xl mb-0 font-thin font-body'>Nav AI</div>
-        </div> : ""}
-
+    <div className={`w-screen h-screen ${llogo ? 'flex' : ''} bg-gradient-to-br from-white via-blue-50 to-blue-100 items-center justify-center text-gray-800 text-center transition-colors duration-300`}>
+      <div className="max-w-lg w-full mx-auto p-6 rounded-3xl shadow-2xl bg-white/90 backdrop-blur-md">
+        {llogo ? (
+          <div className='flex items-center justify-center h-20 mb-6'>
+            <img src={logo} className='h-14 rounded-full mr-4 shadow-[0_0_16px_rgba(0,120,255,0.25)] border-2 border-blue-200' alt="Logo" />
+            <div className='text-5xl font-light font-body tracking-tight text-blue-700 drop-shadow'>Nav AI</div>
+          </div>
+        ) : null}
 
         {transcription && (
           <div className='mt-5'>
-            <p>{transcription}</p>
+            <p className="text-lg text-blue-700 font-medium">{transcription}</p>
           </div>
         )}
-        <div className='flex justify-center p-2'>
+
+        <div className='flex justify-center p-2 gap-4'>
           {isRecording ? (
-            <button className="m-2 p-2 flex items-center gap-2 border rounded-full border-white border-1 hover:bg-gray-600" onClick={stopRecording}>
-              <div className="w-5 h-5 bg-red-500 rounded-full animate-pulse" /> {/* Circular dot */}
-
-
+            <button
+              className="m-2 p-3 flex items-center gap-2 border-none rounded-full bg-red-500/90 shadow-lg hover:bg-red-400 transition"
+              onClick={stopRecording}
+              title="Stop Recording"
+            >
+              <div className="w-4 h-4 bg-white rounded-full animate-pulse" />
             </button>
           ) : (
-            <button className="m-2 p-2 border rounded-full opacity-90 border-white border-1 hover:bg-gray-600" onClick={startRecording}>TALK</button>
+            <button
+              className="m-2 px-6 py-2 rounded-full bg-blue-500 text-white font-semibold shadow hover:bg-blue-400 transition"
+              onClick={startRecording}
+              title="Start Recording"
+            >
+              TALK
+            </button>
           )}
 
           {transcription && (
-            <button onClick={handleScreenshot} className='bg-white m-2 text-black p-2 rounded-full'>
+            <button
+              onClick={handleScreenshot}
+              className='bg-gradient-to-r from-blue-400 to-green-300 m-2 text-white px-6 py-2 rounded-full font-semibold shadow hover:from-blue-500 hover:to-green-400 transition'
+              title="Take Screenshot"
+            >
               SNIP
             </button>
           )}
-
         </div>
 
-
         {screenshotPath && (
-          <div className="mt-5">
-            {/* Restrict image height */}
-            <img src={screenshotPath} alt="Screenshot" className="rounded-lg mt-2" style={{ maxHeight: '200px' }} />
+          <div className="mt-5 flex justify-center">
+            <img src={screenshotPath} alt="Screenshot" className="rounded-xl mt-2 shadow-lg border border-blue-100" style={{ maxHeight: '200px' }} />
           </div>
         )}
 
         {isLoading && (
-          <div className="text-white animate-spin mt-4">0</div> // Loading visual
+          <div className="flex justify-center mt-6">
+            <div className="w-8 h-8 border-4 border-blue-400 border-t-transparent rounded-full animate-spin"></div>
+          </div>
         )}
 
         {responseFromOpenAI && (
-          <div className="text-left p-4 border border-gray-600 rounded-md text-white">
+          <div className="text-left p-4 mt-6 border border-blue-100 rounded-2xl bg-blue-50/70 text-blue-900 shadow">
             {responseFromOpenAI
               .split('\n')
               .map((line, index) => (
