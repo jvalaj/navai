@@ -103,12 +103,12 @@ function App() {
 
             </button>
           ) : (
-            <button className="m-2 p-2 border rounded-full opacity-90 border-white border-1 hover:bg-gray-600" onClick={startRecording}>ask for guidance </button>
+            <button className="m-2 p-2 border rounded-full opacity-90 border-white border-1 hover:bg-gray-600" onClick={startRecording}>TALK</button>
           )}
 
           {transcription && (
             <button onClick={handleScreenshot} className='bg-white m-2 text-black p-2 rounded-full'>
-              take screenshot, send
+              SNIP
             </button>
           )}
 
